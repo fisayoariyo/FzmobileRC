@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>fzmobile Technologies — Project Brief</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0D1B2E;
+    --card:   #132338;
+    --border: #1E3450;
+    --input:  #0F1E30;
+    --blue:   #2563EB;
+    --blue2:  #1D4ED8;
+    --green:  #15803D;
+    --gray:   #1D4ED8;
+    --text:   #E2E8F0;
+    --muted:  #7B93B0;
+    --white:  #FFFFFF;
+    --accent: #3B82F6;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: rgba(13,27,46,.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand { font-size: 18px; font-weight: 700; color: var(--white); letter-spacing: -.3px; }
+  .nav-brand span { font-weight: 400; color: var(--accent); }
+  .nav-tag { font-size: 11px; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 64px 20px 52px;
+    background: linear-gradient(180deg, #0D1B2E 0%, #0F2040 100%);
+  }
+  .hero-pill {
+    display: inline-block;
+    background: rgba(37,99,235,.18);
+    color: var(--accent);
+    border: 1px solid rgba(37,99,235,.35);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 { font-size: 38px; font-weight: 800; color: var(--white); line-height: 1.2; margin-bottom: 8px; }
+  .hero h1 span { color: var(--accent); display: block; }
+  .hero p { font-size: 15px; color: var(--muted); max-width: 480px; margin: 16px auto 0; line-height: 1.7; }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { max-width: 680px; margin: 0 auto; padding: 0 20px 32px; }
+  .progress-steps { display: flex; gap: 6px; margin-top: 24px; }
+  .step {
+    flex: 1; height: 4px; background: var(--border);
+    border-radius: 4px; transition: background .3s;
+  }
+  .step.active { background: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 720px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    background: var(--blue2); color: var(--white);
+    font-size: 12px; font-weight: 700;
+    border-radius: 50%; flex-shrink: 0;
+    margin-right: 10px;
+  }
+  .section-header { display: flex; align-items: center; margin-bottom: 6px; }
+  .section-title { font-size: 17px; font-weight: 600; color: var(--white); }
+  .section-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; padding-left: 36px; }
+
+  /* ── PACKAGES ── */
+  .pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
+  @media(max-width:620px){ .pkg-grid { grid-template-columns:1fr; } }
+
+  .pkg {
+    background: var(--input);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s;
+    position: relative;
+  }
+  .pkg:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .pkg.selected { border-color: var(--accent); }
+  .pkg.selected .pkg-head { opacity: 1; }
+
+  .pkg-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--accent); color: #fff;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: .5px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 10px;
+  }
+  .pkg-head { padding: 16px 16px 12px; }
+  .pkg-starter  .pkg-head { border-top: 3px solid #374151; }
+  .pkg-growth   .pkg-head { border-top: 3px solid var(--accent); }
+  .pkg-premium  .pkg-head { border-top: 3px solid var(--green); }
+  .pkg-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .pkg-sub  { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  .pkg-feats { padding: 0 16px 14px; }
+  .pkg-feat { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .pkg-feat:last-child { border-bottom: none; }
+  .pkg-starter  .pchk { color: #6B7280; }
+  .pkg-growth   .pchk { color: var(--accent); }
+  .pkg-premium  .pchk { color: #22C55E; }
+  .pchk { font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .fn { font-size: 12px; font-weight: 600; color: var(--text); display: block; }
+  .fd { font-size: 11px; color: var(--muted); line-height: 1.45; margin-top: 1px; display: block; }
+
+  /* pkg radio hidden, visual selection via JS */
+  .pkg-radio { display: none; }
+  .pkg-select-row {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pkg-dot {
+    width: 16px; height: 16px;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    flex-shrink: 0; transition: border-color .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pkg.selected .pkg-dot { border-color: var(--accent); }
+  .pkg.selected .pkg-dot::after {
+    content: ''; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+  }
+  .pkg-select-label { font-size: 12px; color: var(--muted); }
+  .pkg.selected .pkg-select-label { color: var(--accent); font-weight: 600; }
+
+  /* ── FORM ELEMENTS ── */
+  .field { margin-bottom: 22px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label.field-label {
+    display: block;
+    font-size: 13px; font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .req { color: #EF4444; }
+  .field-hint { font-size: 12px; color: var(--muted); display: block; margin-bottom: 8px; margin-top: -4px; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:520px){ .field-row { grid-template-columns:1fr; } }
+
+  input[type=text], input[type=email], input[type=tel], input[type=date], textarea, select {
+    width: 100%;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s;
+    resize: vertical;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted); }
+  select { cursor: pointer; }
+  select option { background: var(--card); color: var(--text); }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  input.invalid, textarea.invalid { border-color: #EF4444; }
+  textarea { min-height: 82px; }
+
+  /* checkbox / radio grid */
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media(max-width:480px){ .check-grid { grid-template-columns:1fr; } }
+  .check-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .chk-opt {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: border-color .15s;
+    user-select: none;
+  }
+  .chk-opt:hover { border-color: var(--accent); }
+  .chk-opt input[type=checkbox], .chk-opt input[type=radio] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer; flex-shrink: 0;
+    background: none; border: none;
+    padding: 0; margin: 0;
+    min-width: unset;
+    border-radius: 0;
+  }
+  .chk-opt span { font-size: 13px; color: var(--text); }
+
+  /* ── ONGOING BOX ── */
+  .ongoing-info {
+    background: rgba(37,99,235,.1);
+    border: 1px solid rgba(37,99,235,.3);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+  }
+  .ongoing-info h4 { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 5px; }
+  .ongoing-info p  { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+  /* ── ERROR ── */
+  .err { font-size: 12px; color: #EF4444; margin-top: 5px; display: none; }
+
+  /* ── SUBMIT ── */
+  .submit-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 20px;
+  }
+  .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .btn-submit {
+    background: var(--accent);
+    color: var(--white);
+    border: none; border-radius: 8px;
+    padding: 13px 36px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  .btn-submit:hover { background: var(--blue2); }
+  .btn-clear {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 13px 22px;
+    font-size: 14px; cursor: pointer;
+    font-family: inherit; transition: color .15s, border-color .15s;
+  }
+  .btn-clear:hover { color: var(--text); border-color: var(--muted); }
+  .submit-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+
+  /* ── CONFIRMATION ── */
+  #confirm {
+    display: none;
+    text-align: center;
+    padding: 72px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  #confirm .tick { font-size: 56px; margin-bottom: 20px; }
+  #confirm h2 { font-size: 24px; font-weight: 700; color: var(--white); margin-bottom: 12px; }
+  #confirm p  { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 12px; color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div>
+    <div class="nav-brand">Fzmobile<span> Technologies</span></div>
+  </div>
+  <div class="nav-tag">Web · SEO · Digital Growth</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-pill">Project Brief</div>
+  <h1>Let's Build Your<span>Digital Presence</span></h1>
+  <p>Fill out this brief so we can understand your goals and put together the right solution for your business.</p>
+</div>
+
+<main>
+
+  <!-- ── 1. PACKAGES ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">1</span>
+      <span class="section-title">Choose Your Package</span>
+    </div>
+    <p class="section-desc">Select the package that best fits where you are right now. Not sure? Pick "Advise me" below — we'll recommend based on your answers.</p>
+
+    <div class="pkg-grid">
+
+      <!-- STARTER -->
+      <div class="pkg pkg-starter" onclick="selectPkg(this,'starter')">
+        <div class="pkg-head">
+          <div class="pkg-name">Starter</div>
+          <div class="pkg-sub">Website Only — a professional online presence ready to receive enquiries from day one.</div>
+        </div>
+        <div class="pkg-feats">
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Up to 5 pages</span><span class="fd">Home, About, Services, Quote Request, Contact.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Mobile-responsive design</span><span class="fd">Works on all devices.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Contact & quote form</span><span class="fd">Leads go straight to your inbox.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Basic SEO setup</span><span class="fd">Configured correctly from launch.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Speed optimisation</span><span class="fd">Fast load times across devices.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">1 round of revisions</span><span class="fd">Before final sign-off.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">2-week post-launch support</span><span class="fd">Issues fixed at no extra cost.</span></div></div>
+        </div>
+        <div class="pkg-select-row">
+          <div class="pkg-dot"></div>
+          <span class="pkg-select-label">Select Starter</span>
+        </div>
+        <input type="radio" name="pkg" value="starter" class="pkg-radio"/>
+      </div>
+
+      <!-- GROWTH -->
+      <div class="pkg pkg-growth" onclick="selectPkg(this,'growth')">
+        <div class="pkg-badge">POPULAR</div>
+        <div class="pkg-head">
+          <div class="pkg-name">Growth</div>
+          <div class="pkg-sub">Website + SEO & Traffic — built to rank and grow month over month.</div>
+        </div>
+        <div class="pkg-feats">
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Everything in Starter</span><span class="fd">All Starter features included.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Up to 8 pages</span><span class="fd">Blog, FAQ, extra service pages.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Google Business Profile</span><span class="fd">Local search & Maps visibility.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Keyword research</span><span class="fd">Target what your customers search.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">On-page SEO optimisation</span><span class="fd">Every page fully optimised.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Monthly SEO reporting</span><span class="fd">Rankings, traffic, next steps.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Monthly traffic retainer</span><span class="fd">Content, fixes, link building.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">4-week post-launch support</span><span class="fd">Extended cover window.</span></div></div>
+        </div>
+        <div class="pkg-select-row">
+          <div class="pkg-dot"></div>
+          <span class="pkg-select-label">Select Growth</span>
+        </div>
+        <input type="radio" name="pkg" value="growth" class="pkg-radio"/>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="pkg pkg-premium" onclick="selectPkg(this,'premium')">
+        <div class="pkg-head">
+          <div class="pkg-name">Premium</div>
+          <div class="pkg-sub">Full Digital Presence — maximum visibility, paid ads, and a team managing everything.</div>
+        </div>
+        <div class="pkg-feats">
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Everything in Growth</span><span class="fd">All Growth features included.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Custom design</span><span class="fd">Bespoke — not a template.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Unlimited pages</span><span class="fd">Full site build-out.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Blog & 3 written posts</span><span class="fd">Optimised for target keywords.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Social media integration</span><span class="fd">Profiles connected to the site.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Paid ads management</span><span class="fd">Google & Facebook/Meta campaigns.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Quarterly strategy call</span><span class="fd">Review & plan every 3 months.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">Priority support</span><span class="fd">Same-day response, always.</span></div></div>
+          <div class="pkg-feat"><span class="pchk">✓</span><div><span class="fn">90-day post-launch support</span><span class="fd">3 months of post-launch cover.</span></div></div>
+        </div>
+        <div class="pkg-select-row">
+          <div class="pkg-dot"></div>
+          <span class="pkg-select-label">Select Premium</span>
+        </div>
+        <input type="radio" name="pkg" value="premium" class="pkg-radio"/>
+      </div>
+    </div>
+
+    <!-- Unsure option -->
+    <label class="chk-opt" style="margin-bottom:0">
+      <input type="radio" name="pkg" value="unsure" onchange="clearPkgCards()"/>
+      <span>Not sure yet — please advise me based on my answers</span>
+    </label>
+    <div class="err" id="pkg-err">Please select a package or choose "advise me" to continue.</div>
+  </div>
+
+  <!-- ── 2. BUSINESS INFORMATION ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <span class="section-title">Business Information</span>
+    </div>
+    <p class="section-desc">Tell us about your insurance business so we can build the right foundation.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Business Name <span class="req">*</span></label>
+        <input type="text" id="biz-name" placeholder="e.g. Hartwell Insurance LLC" required/>
+        <div class="err" id="biz-name-err">Required.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Business Location <span class="req">*</span></label>
+        <input type="text" id="biz-loc" placeholder="e.g. Atlanta, Georgia" required/>
+        <div class="err" id="biz-loc-err">Required.</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Types of Insurance You Offer <span class="req">*</span></label>
+      <span class="field-hint">Select all that apply.</span>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="checkbox" name="ins" value="health"/><span>Health</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="auto"/><span>Auto / Vehicle</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="life"/><span>Life</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="commercial"/><span>Commercial / Business</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="home"/><span>Renters / Home</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="disability"/><span>Disability</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="travel"/><span>Travel</span></label>
+        <label class="chk-opt"><input type="checkbox" name="ins" value="other"/><span>Other</span></label>
+      </div>
+      <textarea placeholder="Describe any additional types..." style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Current Website URL (if any)</label>
+      <input type="text" placeholder="https://yoursite.com — leave blank if none"/>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Do you have existing branding — logo, colours, fonts?</label>
+      <div class="check-list">
+        <label class="chk-opt"><input type="radio" name="brand" value="full"/><span>Yes — logo and brand guidelines</span></label>
+        <label class="chk-opt"><input type="radio" name="brand" value="logo"/><span>Logo only, no formal guidelines</span></label>
+        <label class="chk-opt"><input type="radio" name="brand" value="none"/><span>Nothing yet — I'd like branding included</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Business Stage</label>
+      <select>
+        <option value="" disabled selected>Select stage...</option>
+        <option>Just starting out</option>
+        <option>Trading, looking to grow</option>
+        <option>Established — refreshing our presence</option>
+        <option>Scaling rapidly</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">How did you hear about us?</label>
+      <div class="check-list">
+        <label class="chk-opt"><input type="radio" name="referral" value="referral"/><span>Referral / word of mouth</span></label>
+        <label class="chk-opt"><input type="radio" name="referral" value="google"/><span>Google search</span></label>
+        <label class="chk-opt"><input type="radio" name="referral" value="social"/><span>Social media</span></label>
+        <label class="chk-opt"><input type="radio" name="referral" value="other"/><span>Other</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. WEBSITE GOALS ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <span class="section-title">Website Goals</span>
+    </div>
+    <p class="section-desc">Select all that apply to your business objectives.</p>
+
+    <div class="field">
+      <div class="check-grid">
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Generate more leads</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Allow online quote requests</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Build brand trust</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Showcase services clearly</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Improve existing site</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Expand to new markets</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Replace outdated website</span></label>
+        <label class="chk-opt"><input type="checkbox" name="goal"/><span>Increase online visibility</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Pages you want on the site</label>
+      <span class="field-hint">Select all you'd like included.</span>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="checkbox" name="pages" checked/><span>Home</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>About Us / Our Team</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>Services / Insurance Types</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>Get a Quote</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>FAQ</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>Blog / Resources</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>Testimonials</span></label>
+        <label class="chk-opt"><input type="checkbox" name="pages"/><span>Contact</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Any special features needed?</label>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="checkbox" name="feat"/><span>Online quote calculator</span></label>
+        <label class="chk-opt"><input type="checkbox" name="feat"/><span>Live chat</span></label>
+        <label class="chk-opt"><input type="checkbox" name="feat"/><span>Client login / portal</span></label>
+        <label class="chk-opt"><input type="checkbox" name="feat"/><span>Policy document downloads</span></label>
+        <label class="chk-opt"><input type="checkbox" name="feat"/><span>Appointment / callback booking</span></label>
+        <label class="chk-opt"><input type="checkbox" name="feat"/><span>None — keep it simple</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Will you provide written content or need us to write it? <span class="req">*</span></label>
+      <span class="field-hint">Content = page text, service descriptions, team bios, FAQs.</span>
+      <div class="check-list">
+        <label class="chk-opt"><input type="radio" name="content" value="client"/><span>I'll provide everything</span></label>
+        <label class="chk-opt"><input type="radio" name="content" value="agency"/><span>Please write it for me (add-on cost applies)</span></label>
+        <label class="chk-opt"><input type="radio" name="content" value="mixed"/><span>A mix — I'll provide some, you write the rest</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Do you have images or photos for the site?</label>
+      <div class="check-list">
+        <label class="chk-opt"><input type="radio" name="images" value="yes"/><span>Yes — I have photos ready</span></label>
+        <label class="chk-opt"><input type="radio" name="images" value="stock"/><span>No — please use stock photography</span></label>
+        <label class="chk-opt"><input type="radio" name="images" value="both"/><span>A mix of both</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Any websites you like the look of?</label>
+      <span class="field-hint">Paste 1–3 links. Doesn't have to be insurance-related.</span>
+      <textarea placeholder="https://..."></textarea>
+    </div>
+  </div>
+
+  <!-- ── 4. TRAFFIC & GROWTH ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">4</span>
+      <span class="section-title">Traffic & Growth</span>
+    </div>
+    <p class="section-desc">Relevant to Growth and Premium packages. Skip if you selected Starter.</p>
+
+    <div class="field">
+      <label class="field-label">What kind of growth are you looking for?</label>
+      <div class="check-list">
+        <label class="chk-opt"><input type="checkbox" name="growth"/><span>Organic search (SEO) — grow steadily over time</span></label>
+        <label class="chk-opt"><input type="checkbox" name="growth"/><span>Paid advertising — Google Ads, Facebook / Meta</span></label>
+        <label class="chk-opt"><input type="checkbox" name="growth"/><span>Both</span></label>
+        <label class="chk-opt"><input type="checkbox" name="growth"/><span>Not sure — please advise me</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Who is your ideal customer?</label>
+      <span class="field-hint">Age range, location in the US, income level, what they're looking for.</span>
+      <textarea placeholder="e.g. Adults aged 30–55, homeowners in the South looking for bundled home and auto cover..."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Current monthly website visitors</label>
+        <select>
+          <option value="" disabled selected>Select range...</option>
+          <option>No site yet</option>
+          <option>Under 500</option>
+          <option>500 – 2,000</option>
+          <option>2,000 – 10,000</option>
+          <option>10,000+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Primary growth goal</label>
+        <select>
+          <option value="" disabled selected>Select goal...</option>
+          <option>More leads / enquiries</option>
+          <option>More quote requests</option>
+          <option>Brand awareness</option>
+          <option>Local market dominance</option>
+          <option>Nationwide reach</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Which US states or cities are you targeting?</label>
+      <span class="field-hint">This shapes our local SEO and ad strategy.</span>
+      <textarea placeholder="e.g. Texas, Florida, Georgia — or specific cities like Houston, Miami, Atlanta..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Active social media accounts?</label>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="checkbox" name="social"/><span>Facebook</span></label>
+        <label class="chk-opt"><input type="checkbox" name="social"/><span>Instagram</span></label>
+        <label class="chk-opt"><input type="checkbox" name="social"/><span>LinkedIn</span></label>
+        <label class="chk-opt"><input type="checkbox" name="social"/><span>X / Twitter</span></label>
+        <label class="chk-opt"><input type="checkbox" name="social"/><span>TikTok</span></label>
+        <label class="chk-opt"><input type="checkbox" name="social"/><span>None yet</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Who are your main competitors?</label>
+      <span class="field-hint">Any names you're aware of — local agents, national brands, or direct alternatives.</span>
+      <textarea placeholder="e.g. State Farm, Lemonade, a local agency in your area..."></textarea>
+    </div>
+  </div>
+
+  <!-- ── 5. ONGOING SUPPORT ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">5</span>
+      <span class="section-title">Ongoing Support After Launch</span>
+    </div>
+    <p class="section-desc">Let us know if you'd like continued support once the site is live.</p>
+
+    <div class="ongoing-info">
+      <h4>What is Ongoing Support?</h4>
+      <p>After launch, we offer a continuous monthly plan that keeps your business growing online — covering website maintenance and updates, SEO, digital marketing, content, and performance monitoring. One team, one monthly engagement, zero stress.</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Would you like ongoing support after launch? <span class="req">*</span></label>
+      <div class="check-list">
+        <label class="chk-opt"><input type="radio" name="ongoing" value="yes"/><span>Yes — include it in the proposal</span></label>
+        <label class="chk-opt"><input type="radio" name="ongoing" value="maybe"/><span>Possibly — share details and I'll decide</span></label>
+        <label class="chk-opt"><input type="radio" name="ongoing" value="no"/><span>No — I'll manage things myself after launch</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">If yes, which areas would you want covered?</label>
+      <span class="field-hint">Select all that apply.</span>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="checkbox" name="support"/><span>Website maintenance & updates</span></label>
+        <label class="chk-opt"><input type="checkbox" name="support"/><span>Search engine optimisation</span></label>
+        <label class="chk-opt"><input type="checkbox" name="support"/><span>Digital marketing & advertising</span></label>
+        <label class="chk-opt"><input type="checkbox" name="support"/><span>Content creation & publishing</span></label>
+        <label class="chk-opt"><input type="checkbox" name="support"/><span>Monthly performance reporting</span></label>
+        <label class="chk-opt"><input type="checkbox" name="support"/><span>Handle everything for me</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">After launch, who handles day-to-day updates? <span class="req">*</span></label>
+      <div class="check-list">
+        <label class="chk-opt"><input type="radio" name="updates" value="me"/><span>Me or my team</span></label>
+        <label class="chk-opt"><input type="radio" name="updates" value="fz"/><span>fzmobile Technologies</span></label>
+        <label class="chk-opt"><input type="radio" name="updates" value="tbd"/><span>Not decided yet</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. TIMELINE ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">6</span>
+      <span class="section-title">Timeline & Launch</span>
+    </div>
+    <p class="section-desc">Help us understand your timing so we can plan accordingly.</p>
+
+    <div class="field">
+      <label class="field-label">When do you want to launch?</label>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="radio" name="deadline" value="asap"/><span>ASAP (within 2 weeks)</span></label>
+        <label class="chk-opt"><input type="radio" name="deadline" value="1month"/><span>1 month</span></label>
+        <label class="chk-opt"><input type="radio" name="deadline" value="2-3months"/><span>2–3 months</span></label>
+        <label class="chk-opt"><input type="radio" name="deadline" value="flexible"/><span>Flexible / no rush</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Preferred launch date (optional)</label>
+      <input type="text" placeholder="e.g. end of July 2025"/>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Any legal or compliance requirements we should know about?</label>
+      <span class="field-hint">e.g. state licensing disclosures, required disclaimers, regulatory language for US insurance.</span>
+      <textarea placeholder="Describe here, or write 'not sure' — we'll flag what's standard for your state..."></textarea>
+    </div>
+  </div>
+
+  <!-- ── 7. CONTACT ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-num">7</span>
+      <span class="section-title">Your Contact Details</span>
+    </div>
+    <p class="section-desc">How should we reach you with the proposal?</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">First Name <span class="req">*</span></label>
+        <input type="text" id="c-first" placeholder="Jane" required/>
+        <div class="err" id="c-first-err">Required.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Last Name <span class="req">*</span></label>
+        <input type="text" id="c-last" placeholder="Smith" required/>
+        <div class="err" id="c-last-err">Required.</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Email Address <span class="req">*</span></label>
+        <input type="email" id="c-email" placeholder="jane@company.com" required/>
+        <div class="err" id="c-email-err">Please enter a valid email.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Phone Number</label>
+        <input type="tel" placeholder="+1 (555) 000-0000"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Best way to reach you?</label>
+      <div class="check-grid">
+        <label class="chk-opt"><input type="radio" name="contact_pref" value="email"/><span>Email</span></label>
+        <label class="chk-opt"><input type="radio" name="contact_pref" value="whatsapp"/><span>WhatsApp</span></label>
+        <label class="chk-opt"><input type="radio" name="contact_pref" value="call"/><span>Phone call</span></label>
+        <label class="chk-opt"><input type="radio" name="contact_pref" value="any"/><span>Any — whatever's easiest</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Additional Notes or Questions</label>
+      <textarea placeholder="Anything else we should know about your project — budget range, past experiences, specific requests..."></textarea>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-card">
+    <div class="submit-row">
+      <button class="btn-submit" onclick="handleSubmit()">Submit Project Brief</button>
+      <button class="btn-clear" type="button" onclick="handleClear()">Clear Form</button>
+    </div>
+    <p class="submit-note">We'll review your answers and send a tailored proposal within 2 business days. No commitment required at this stage.</p>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div id="confirm">
+    <div class="tick">✅</div>
+    <h2>Brief received — thank you.</h2>
+    <p>We'll review your answers and come back with a full, itemised proposal within <strong>2 business days</strong>.<br/><br/>No obligation until you're happy to proceed.</p>
+    <p style="margin-top:18px;font-size:13px;color:var(--muted)">— fzmobile technologies</p>
+  </div>
+
+</main>
+
+<footer>
+  Web · SEO · Digital Growth &nbsp;·&nbsp; <strong style="color:var(--text)">fzmobile Technologies</strong>
+</footer>
+
+<script>
+  // Package card selection
+  function selectPkg(card, val) {
+    document.querySelectorAll('.pkg').forEach(p => p.classList.remove('selected'));
+    card.classList.add('selected');
+    // uncheck "unsure" radio
+    const unsure = document.querySelector('input[name="pkg"][value="unsure"]');
+    if (unsure) unsure.checked = false;
+    card.querySelector('.pkg-radio').checked = true;
+  }
+  function clearPkgCards() {
+    document.querySelectorAll('.pkg').forEach(p => p.classList.remove('selected'));
+  }
+
+  // Progress bar — light touch, marks steps as active based on scroll
+  const steps = document.querySelectorAll('.step');
+
+  // Validation
+  function validate() {
+    let ok = true;
+
+    const textFields = [
+      { id: 'biz-name',   errId: 'biz-name-err'  },
+      { id: 'biz-loc',    errId: 'biz-loc-err'   },
+      { id: 'c-first',    errId: 'c-first-err'   },
+      { id: 'c-last',     errId: 'c-last-err'    },
+      { id: 'c-email',    errId: 'c-email-err'   },
+    ];
+    textFields.forEach(f => {
+      const el  = document.getElementById(f.id);
+      const err = document.getElementById(f.errId);
+      if (!el.value.trim()) {
+        el.classList.add('invalid');
+        err.style.display = 'block';
+        if (ok) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        ok = false;
+      } else {
+        el.classList.remove('invalid');
+        err.style.display = 'none';
+      }
+    });
+
+    // Package
+    const pkg = document.querySelector('input[name="pkg"]:checked');
+    const pkgErr = document.getElementById('pkg-err');
+    if (!pkg) {
+      pkgErr.style.display = 'block';
+      if (ok) pkgErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      ok = false;
+    } else {
+      pkgErr.style.display = 'none';
+    }
+
+    return ok;
+  }
+
+  function handleSubmit() {
+    if (!validate()) return;
+    // Hide everything, show confirmation
+    document.querySelectorAll('main > *:not(#confirm)').forEach(el => el.style.display = 'none');
+    const c = document.getElementById('confirm');
+    c.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleClear() {
+    if (!confirm('Clear all answers and start over?')) return;
+    document.querySelectorAll('input[type=text], input[type=email], input[type=tel], textarea')
+      .forEach(el => el.value = '');
+    document.querySelectorAll('input[type=radio], input[type=checkbox]')
+      .forEach(el => el.checked = false);
+    document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    document.querySelectorAll('.err').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.pkg').forEach(p => p.classList.remove('selected'));
+  }
+</script>
+
+</body>
+</html>
